@@ -88,3 +88,62 @@ Citations:
 [6] https://docs.docker.com/desktop/extensions-sdk/quickstart/
 [7] https://github.com/docker/getting-started
 [8] https://www.reddit.com/r/webdev/comments/fca48o/docker_quickstart_guide_for_developers/
+
+-----
+
+将Python脚本进行Docker化是一个将应用程序及其依赖项打包在一个轻量级、可移植的容器中的过程，这样可以确保应用程序在任何环境中都能以相同的方式运行。以下是一个快速入门教程，用于将一个简单的Python脚本（输出`print("Hello World")`）进行Docker化。
+
+### 步骤1: 创建Python脚本
+
+首先，创建一个名为`hello.py`的Python脚本，内容如下：
+
+```python
+print("Hello World")
+```
+
+### 步骤2: 创建Dockerfile
+
+Dockerfile是一个文本文件，包含了运行应用所需的所有命令。在与`hello.py`相同的目录下创建一个名为`Dockerfile`的文件，内容如下：
+
+```Dockerfile
+# 使用官方Python运行时作为父镜像
+FROM python:3.8-slim
+
+# 设置工作目录为/app
+WORKDIR /app
+
+# 将当前目录内容复制到位于/app中的容器中
+COPY . /app
+
+# 通过运行python命令来运行脚本
+CMD ["python", "./hello.py"]
+```
+
+这个Dockerfile执行了以下操作：
+
+- 从Docker Hub上获取官方的Python 3.8镜像。
+- 设置容器内的工作目录为`/app`。
+- 将当前目录（包含你的`hello.py`脚本）的内容复制到容器的`/app`目录。
+- 设置容器启动时执行的命令为`python ./hello.py`。
+
+### 步骤3: 构建Docker镜像
+
+打开终端或命令提示符，导航到包含`hello.py`和`Dockerfile`的目录。运行以下命令来构建Docker镜像，其中`hello-world-image`是你给镜像起的名字：
+
+```bash
+docker build -t hello-world-image .
+```
+
+这个命令会读取当前目录的`Dockerfile`，并根据其内容构建一个新的Docker镜像。
+
+### 步骤4: 运行Docker容器
+
+构建完成后，使用以下命令运行Docker容器：
+
+```bash
+docker run hello-world-image
+```
+
+这条命令会启动一个基于`hello-world-image`镜像的容器。你应该会在终端看到输出`Hello World`。
+
+通过以上步骤，你已经成功地将一个简单的Python脚本Docker化了。这个过程展示了如何使用Dockerfile定义容器的环境，以及如何构建和运行基于这个Dockerfile的Docker镜像。Docker化可以让你的应用在任何支持Docker的环境中无缝运行，极大地提高了应用的可移植性和灵活性。
